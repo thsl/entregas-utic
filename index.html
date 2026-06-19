@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAF Sebrae Nacional · Entregas 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep:    #020b18;
+    --bg-mid:     #061525;
+    --bg-card:    #0a1f35;
+    --cyan-vivid: #00c8ff;
+    --cyan-soft:  #38bdf8;
+    --cyan-pale:  #7dd3fc;
+    --cyan-glow:  rgba(0,200,255,0.15);
+    --border:     rgba(0,200,255,0.18);
+    --text-pri:   #e8f4fd;
+    --text-sec:   #8ab4cc;
+    --text-muted: #4a7a99;
+    --white:      #ffffff;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Figtree', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-pri);
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: relative;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 48px;
+    background: rgba(2,11,24,0.7);
+    backdrop-filter: blur(18px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--cyan-vivid);
+    box-shadow: 0 0 10px var(--cyan-vivid);
+    animation: pulse-dot 2s infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100%{ box-shadow: 0 0 6px var(--cyan-vivid); }
+    50%{ box-shadow: 0 0 18px var(--cyan-vivid), 0 0 36px rgba(0,200,255,0.3); }
+  }
+  .nav-title {
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.04em;
+    color: var(--text-pri);
+  }
+  .nav-subtitle {
+    font-size: 11px;
+    color: var(--text-sec);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .nav-badge {
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--cyan-pale);
+    letter-spacing: 0.06em;
+    background: rgba(0,200,255,0.05);
+  }
+
+  /* ── HERO ── */
+  #hero {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  #bg-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+  #network-svg {
+    position: relative;
+    z-index: 5;
+    width: 100%; 
+    height: clamp(340px, 55vh, 600px);
+    flex: 0 1 auto;
+  }
+  .hero-content {
+    position: relative;
+    z-index: 10;
+    text-align: center;
+    pointer-events: none;
+    padding: 24px 24px 8px;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan-vivid);
+    margin-bottom: 16px;
+  }
+  .hero-title {
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .hero-title span {
+    background: linear-gradient(135deg, var(--cyan-vivid), var(--cyan-pale));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: clamp(0.85rem, 1.4vw, 1rem);
+    color: var(--text-sec);
+    font-weight: 400;
+    max-width: 500px;
+    margin: 0 auto 20px;
+    line-height: 1.6;
+  }
+  .hero-hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    pointer-events: none;
+    animation: float-hint 3s ease-in-out infinite;
+  }
+  .hero-hint::before {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--text-muted);
+  }
+  .hero-hint::after {
+    content: '';
+    width: 20px; height: 1px;
+    background: var(--text-muted);
+  }
+  @keyframes float-hint {
+    0%,100%{ transform: translateY(0); opacity:.6; }
+    50%{ transform: translateY(-4px); opacity:1; }
+  }
+
+  /* Network node styles (SVG elements get class via JS) */
+  .node-group { cursor: pointer; }
+  .node-group:hover .node-ring { opacity: 1; transform: scale(1.1); }
+
+  /* ── SECTION: ABOUT ── */
+  #about {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .section-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--cyan-vivid);
+    margin-bottom: 14px;
+  }
+  .section-title {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .section-body {
+    font-size: 1rem;
+    color: var(--text-sec);
+    line-height: 1.7;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 56px;
+    flex-wrap: wrap;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-number {
+    font-size: 2.6rem;
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1;
+  }
+  .stat-number span {
+    color: var(--cyan-vivid);
+  }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 6px;
+    font-weight: 500;
+  }
+
+  /* ── UNITS GRID ── */
+  #units {
+    padding: 60px 48px 100px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .units-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+    margin-top: 48px;
+  }
+  .unit-card {
+    background: linear-gradient(135deg, rgba(10,31,53,0.9), rgba(6,21,37,0.95));
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    position: relative;
+    overflow: hidden;
+  }
+  .unit-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--cyan-vivid), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .unit-card:hover::before { opacity: 1; }
+  .unit-card:hover {
+    border-color: rgba(0,200,255,0.4);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,200,255,0.1), 0 0 0 1px rgba(0,200,255,0.1);
+  }
+  .unit-card-sigla {
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: var(--cyan-vivid);
+    letter-spacing: 0.02em;
+    margin-bottom: 8px;
+  }
+  .unit-card-name {
+    font-size: 13px;
+    color: var(--text-sec);
+    line-height: 1.5;
+    font-weight: 500;
+  }
+  .unit-card-arrow {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: rgba(0,200,255,0.1);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--cyan-vivid);
+    font-size: 14px;
+    transition: all 0.3s;
+  }
+  .unit-card:hover .unit-card-arrow {
+    background: var(--cyan-vivid);
+    color: var(--bg-deep);
+  }
+
+  /* ── MODAL ── */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(2,11,24,0.85);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+  #modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  #modal {
+    background: linear-gradient(160deg, #071929 0%, #040f1d 100%);
+    border: 1px solid rgba(0,200,255,0.22);
+    border-radius: 24px;
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.95) translateY(20px);
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 60px rgba(0,200,255,0.08);
+  }
+  #modal-overlay.open #modal {
+    transform: scale(1) translateY(0);
+  }
+  /* Custom scrollbar */
+  #modal::-webkit-scrollbar { width: 4px; }
+  #modal::-webkit-scrollbar-track { background: transparent; }
+  #modal::-webkit-scrollbar-thumb { background: rgba(0,200,255,0.25); border-radius: 4px; }
+
+  .modal-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: linear-gradient(160deg, rgba(7,25,41,0.98) 0%, rgba(4,15,29,0.98) 100%);
+    backdrop-filter: blur(12px);
+    padding: 32px 36px 24px;
+    border-bottom: 1px solid var(--border);
+    border-radius: 24px 24px 0 0;
+  }
+  .modal-close {
+    position: absolute;
+    top: 24px; right: 24px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text-sec);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    transition: all 0.2s;
+    line-height: 1;
+  }
+  .modal-close:hover {
+    background: rgba(0,200,255,0.1);
+    color: var(--cyan-vivid);
+    border-color: rgba(0,200,255,0.4);
+  }
+  .modal-eyebrow {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--cyan-vivid);
+    margin-bottom: 10px;
+  }
+  .modal-title {
+    font-size: clamp(1.2rem, 3vw, 1.7rem);
+    font-weight: 800;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 8px;
+    padding-right: 44px;
+  }
+  .modal-desc {
+    font-size: 14px;
+    color: var(--text-sec);
+    line-height: 1.6;
+  }
+  .modal-body {
+    padding: 40px 36px 48px;
+  }
+  .timeline-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 0;
+  }
+  .timeline-line {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--cyan-vivid) 8%, rgba(0,200,255,0.35) 92%, transparent);
+    transform: translateX(-50%);
+  }
+  .timeline-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 36px;
+    position: relative;
+  }
+  .timeline-item:last-child { margin-bottom: 0; }
+
+  /* Alternating: odd = content left, dot center, empty right */
+  /* even = empty left, dot center, content right */
+  .ti-left { width: calc(50% - 28px); text-align: right; padding-right: 0; }
+  .ti-dot-wrap {
+    width: 56px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: 4px;
+  }
+  .ti-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    background: var(--bg-deep);
+    border: 2px solid var(--cyan-vivid);
+    box-shadow: 0 0 10px rgba(0,200,255,0.5);
+    flex-shrink: 0;
+  }
+  .ti-connector {
+    width: 1px;
+    flex: 1;
+    background: transparent;
+  }
+  .ti-right { width: calc(50% - 28px); }
+
+  .ti-card {
+    background: rgba(0,200,255,0.04);
+    border: 1px solid rgba(0,200,255,0.12);
+    border-radius: 12px;
+    padding: 16px 18px;
+    transition: all 0.25s;
+  }
+  .ti-card:hover {
+    background: rgba(0,200,255,0.08);
+    border-color: rgba(0,200,255,0.28);
+  }
+  .ti-month {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cyan-vivid);
+    margin-bottom: 5px;
+  }
+  .ti-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.35;
+    margin-bottom: 4px;
+  }
+  .ti-text {
+    font-size: 12px;
+    color: var(--text-sec);
+    line-height: 1.55;
+  }
+  /* Empty side placeholder */
+  .ti-empty { width: calc(50% - 28px); }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 48px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+  }
+  .footer-logo {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+  .footer-copy {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-badge { display: none; }
+    #about, #units { padding: 60px 20px; }
+    .stats-row { gap: 32px; }
+    .units-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .unit-card { padding: 20px 16px; }
+    footer { padding: 32px 20px; }
+
+    /* Mobile timeline: single column */
+    .timeline-line { left: 22px; }
+    .timeline-item { flex-direction: row; }
+    .ti-left, .ti-empty { display: none; }
+    .ti-dot-wrap { width: 44px; padding-top: 3px; }
+    .ti-right, .timeline-item.left .ti-right {
+      width: calc(100% - 44px);
+      text-align: left;
+    }
+    /* For left-aligned items, swap them */
+    .timeline-item.left .ti-left-content {
+      display: block;
+      width: calc(100% - 44px);
+    }
+    .modal-header { padding: 24px 20px 20px; }
+    .modal-body { padding: 28px 20px 36px; }
+    .modal-title { font-size: 1.2rem; }
+  }
+  @media (max-width: 480px) {
+    .units-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 1.8rem; }
+  }
+
+  /* Particle bg effect */
+  #particle-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--cyan-vivid);
+    opacity: 0;
+    animation: particle-float linear infinite;
+  }
+  @keyframes particle-float {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.2; }
+    100% { transform: translateY(-100px) scale(1); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    <div>
+      <div class="nav-title">Sebrae Nacional</div>
+      <div class="nav-subtitle">DAF · Entregas 2026</div>
+    </div>
+  </div>
+  <div class="nav-badge">2026</div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div id="particle-layer"></div>
+
+  <!-- Background animated canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  
+
+  <!-- Hero text -->
+  <div class="hero-content">
+    <div class="hero-eyebrow">Diretoria de Administração e Finanças</div>
+    <h1 class="hero-title">Conectando <span>pessoas,</span><br>transformando <span>resultados</span></h1>
+    <p class="hero-sub">Um ano de entregas que fortaleceram a infraestrutura do Sebrae Nacional. Explore as realizações de cada unidade.</p>
+    <div class="hero-hint">Clique nos nós para explorar</div>
+  </div>
+  <!-- Network SVG (nodes) -->
+  <svg id="network-svg" xmlns="http://www.w3.org/2000/svg"></svg>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-eyebrow">Visão Geral · 2026</div>
+  <h2 class="section-title">Uma diretoria que conecta<br>estratégia e operação</h2>
+  <p class="section-body">A DAF é o eixo de sustentação do Sebrae Nacional, garantindo a excelência nos processos de gestão financeira, pessoas, tecnologia, suprimentos e inovação institucional ao longo de todo o ano.</p>
+  <div class="stats-row">
+    <div class="stat-item">
+      <div class="stat-number">8<span>+</span></div>
+      <div class="stat-label">Unidades</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">12</div>
+      <div class="stat-label">Meses de Entregas</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">100<span>%</span></div>
+      <div class="stat-label">Comprometimento</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number">2026</div>
+      <div class="stat-label">Ano de Resultados</div>
+    </div>
+  </div>
+</section>
+
+<!-- UNITS GRID -->
+<section id="units">
+  <div class="section-eyebrow">Unidades · DAF</div>
+  <h2 class="section-title">Explore as gerências</h2>
+  <div class="units-grid" id="units-grid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">SEBRAE NACIONAL · DAF</div>
+  <div class="footer-copy">Diretoria de Administração e Finanças · Relatório de Entregas 2026</div>
+</footer>
+
+<!-- MODAL -->
+<div id="modal-overlay" role="dialog" aria-modal="true">
+  <div id="modal">
+    <div class="modal-header">
+      <button class="modal-close" id="modal-close-btn" aria-label="Fechar">&times;</button>
+      <div class="modal-eyebrow" id="modal-eyebrow">Unidade</div>
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+    </div>
+    <div class="modal-body">
+      <div class="timeline-label">Linha do tempo · Entregas 2026</div>
+      <div class="timeline" id="modal-timeline">
+        <div class="timeline-line"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────
+const units = [
+  {
+    sigla: 'UC',
+    name: 'Universidade Corporativa Sebrae',
+    desc: 'Responsável pelo desenvolvimento de competências e pela educação corporativa de todos os colaboradores do sistema Sebrae, promovendo aprendizagem contínua e inovação pedagógica.',
+    timeline: [
+      { month: 'Janeiro', title: 'Lançamento da Plataforma EAD 3.0', text: 'Nova plataforma de ensino a distância com experiência gamificada e trilhas personalizadas foi lançada para todos os colaboradores do sistema.' },
+      { month: 'Março', title: 'Programa de Liderança 360°', text: 'Início da primeira turma do programa de desenvolvimento de líderes com metodologia baseada em feedbacks multidirecionais e mentoria executiva.' },
+      { month: 'Maio', title: 'Parcerias com Universidades', text: 'Firmadas parcerias com 6 universidades federais para oferta de pós-graduações com desconto exclusivo aos colaboradores.' },
+      { month: 'Agosto', title: 'Imersão de Inovação', text: 'Realização de imersão de 3 dias em inovação e design thinking com mais de 200 participantes de todo o sistema Sebrae.' },
+      { month: 'Outubro', title: 'Certificação de Competências', text: 'Conclusão do mapeamento e certificação de competências essenciais para todos os cargos estratégicos da organização.' },
+      { month: 'Dezembro', title: 'Relatório de Impacto UC', text: 'Publicação do relatório anual demonstrando 94% de satisfação dos participantes e mais de 48.000 horas de capacitação entregues.' },
+    ]
+  },
+  {
+    sigla: 'UGOC',
+    name: 'Unidade de Orçamento, Contabilidade e Convênios',
+    desc: 'Assegura a integridade e a transparência das operações financeiras, orçamentárias e contábeis do Sebrae Nacional, além de gerir os convênios com parceiros institucionais.',
+    timeline: [
+      { month: 'Fevereiro', title: 'Ciclo Orçamentário 2026 Aprovado', text: 'Aprovação do plano orçamentário anual pelo Conselho Deliberativo com todas as metas alinhadas ao planejamento estratégico.' },
+      { month: 'Abril', title: 'Implementação do SIAFI 2.0', text: 'Conclusão da integração com o novo módulo SIAFI, reduzindo em 40% o tempo de fechamento contábil mensal.' },
+      { month: 'Junho', title: 'Auditoria Externa Aprovada', text: 'Empresa de auditoria independente emitiu parecer sem ressalvas para as demonstrações financeiras do primeiro semestre.' },
+      { month: 'Setembro', title: 'Gestão de Convênios Federais', text: 'Formalização de 12 novos convênios com ministérios e órgãos federais, ampliando o portfólio de parceiros institucionais.' },
+      { month: 'Novembro', title: 'Fechamento Contábil Antecipado', text: 'Pelo segundo ano consecutivo, o fechamento contábil anual foi concluído 15 dias antes do prazo regulatório.' },
+    ]
+  },
+  {
+    sigla: 'UGP',
+    name: 'Unidade de Gestão de Pessoas',
+    desc: 'Cuida do ciclo de vida dos colaboradores, desde a atração de talentos até o desenvolvimento de carreira, garantindo um ambiente de trabalho saudável, diverso e de alto desempenho.',
+    timeline: [
+      { month: 'Janeiro', title: 'Novo Modelo de Avaliação de Desempenho', text: 'Lançamento do sistema de gestão de desempenho baseado em OKRs, com check-ins trimestrais e feedback contínuo.' },
+      { month: 'Março', title: 'Pesquisa de Clima 2026', text: 'Aplicação da pesquisa de clima organizacional com 87% de adesão, atingindo índice de engajamento de 82 pontos.' },
+      { month: 'Maio', title: 'Programa de Bem-Estar', text: 'Implementação do programa de saúde mental e bem-estar com suporte psicológico, meditação e ginástica laboral online.' },
+      { month: 'Julho', title: 'Atração de Talentos Tech', text: 'Concluído processo seletivo especializado que integrou 34 novos profissionais de tecnologia e dados ao quadro funcional.' },
+      { month: 'Outubro', title: 'Plano de Sucessão', text: 'Mapeamento e formalização do plano de sucessão para posições estratégicas de liderança de nível gerencial e diretivo.' },
+      { month: 'Dezembro', title: 'Reconhecimento Employer Branding', text: 'Sebrae Nacional foi reconhecido como um dos melhores lugares para trabalhar no setor público pelo 3° ano consecutivo.' },
+    ]
+  },
+  {
+    sigla: 'UTIC',
+    name: 'Unidade de Tecnologia da Informação e Comunicação',
+    desc: 'Garante a infraestrutura tecnológica, a segurança da informação e a evolução digital do Sebrae Nacional, viabilizando a transformação tecnológica da organização.',
+    timeline: [
+      { month: 'Janeiro', title: 'Migração para Cloud Híbrida', text: 'Conclusão da migração de 70% dos sistemas legados para ambiente de cloud híbrida, aumentando disponibilidade para 99.9%.' },
+      { month: 'Março', title: 'Programa de Segurança Cibernética', text: 'Lançamento do programa de conscientização em segurança da informação, incluindo simulações de phishing e treinamentos mensais.' },
+      { month: 'Maio', title: 'Plataforma de Dados e Analytics', text: 'Entrega do Data Lake institucional integrado com dashboards executivos em tempo real para todas as diretorias.' },
+      { month: 'Julho', title: 'Implantação de IA Generativa', text: 'Disponibilização de soluções de IA generativa para áreas-meio, incluindo Copilot corporativo e assistente de documentos.' },
+      { month: 'Setembro', title: 'App Mobile Colaboradores', text: 'Lançamento do aplicativo mobile para colaboradores com acesso a holerites, férias, notícias e serviços de RH.' },
+      { month: 'Novembro', title: 'Certificação ISO 27001', text: 'Obtenção da certificação ISO 27001 em gestão da segurança da informação, reforçando a maturidade da UTIC.' },
+    ]
+  },
+  {
+    sigla: 'UGF',
+    name: 'Unidade de Gestão Financeira',
+    desc: 'Responsável pela execução financeira, gestão de caixa, aplicações e controle de pagamentos, garantindo saúde financeira e eficiência operacional.',
+    timeline: [
+      { month: 'Fevereiro', title: 'Política Financeira Revisada', text: 'Aprovação e publicação da nova política de gestão financeira, com regras atualizadas para aplicações e controle de liquidez.' },
+      { month: 'Abril', title: 'Automação de Pagamentos', text: 'Implementação de RPA para automação de pagamentos recorrentes, reduzindo retrabalho em 60% e eliminando erros operacionais.' },
+      { month: 'Junho', title: 'Gestão de Tesouraria Otimizada', text: 'Novo modelo de gestão de caixa entrou em vigor, gerando rendimento adicional de R$ 2,3M em aplicações de curto prazo.' },
+      { month: 'Setembro', title: 'Relatório de Sustentabilidade Financeira', text: 'Publicação do primeiro relatório de sustentabilidade financeira do Sebrae Nacional com indicadores ESG financeiros.' },
+      { month: 'Novembro', title: 'Encerramento Fiscal 2026', text: 'Antecipação das obrigações fiscais anuais e entrega de todas as declarações nos prazos, sem multas ou pendências.' },
+    ]
+  },
+  {
+    sigla: 'UAS',
+    name: 'Unidade de Administração e Suprimentos',
+    desc: 'Gerencia os recursos físicos, logística, patrimônio e suprimentos do Sebrae Nacional, garantindo condições operacionais adequadas para toda a organização.',
+    timeline: [
+      { month: 'Março', title: 'Gestão Patrimonial Digitalizada', text: 'Conclusão do inventário digital de todos os bens patrimoniais com uso de QR Codes, atingindo 100% de rastreabilidade.' },
+      { month: 'Maio', title: 'Eficiência Energética da Sede', text: 'Implantação de sistema de gestão energética inteligente na sede nacional, reduzindo consumo em 28% no primeiro semestre.' },
+      { month: 'Julho', title: 'Novo Modelo de Suprimentos', text: 'Adoção de metodologia just-in-time para materiais de escritório, reduzindo estoque físico em 45% sem desabastecimento.' },
+      { month: 'Outubro', title: 'Acordo de Nível de Serviço (SLA)', text: 'Publicação dos SLAs de atendimento para todas as demandas internas, com dashboard de acompanhamento em tempo real.' },
+      { month: 'Dezembro', title: 'Prêmio de Excelência Operacional', text: 'UAS foi reconhecida internamente com o prêmio de excelência operacional pela consistência nos indicadores de entrega.' },
+    ]
+  },
+  {
+    sigla: 'UAC',
+    name: 'Unidade de Aquisições e Contratos',
+    desc: 'Conduz os processos licitatórios, gerencia contratos com fornecedores e garante conformidade legal em todas as contratações do Sebrae Nacional.',
+    timeline: [
+      { month: 'Janeiro', title: 'Manual de Contratações 2026', text: 'Publicação do manual atualizado de contratações com as novas diretrizes da Lei 14.133/2021 totalmente incorporadas.' },
+      { month: 'Abril', title: 'Plataforma de Licitações Eletrônicas', text: 'Migração de 100% dos processos licitatórios para plataforma eletrônica, eliminando papel e aumentando transparência.' },
+      { month: 'Junho', title: 'Redução de Custos em Contratos', text: 'Renegociação estratégica de contratos de maior valor resultou em economia de R$ 4,1M em relação ao ano anterior.' },
+      { month: 'Agosto', title: 'Compliance e Integridade', text: 'Treinamento obrigatório em compliance realizado com 100% dos gestores de contratos e toda a equipe da UAC.' },
+      { month: 'Outubro', title: 'Catálogo de Fornecedores Homologados', text: 'Lançamento do novo catálogo com 312 fornecedores homologados, incluindo microempresas e empresas de diversidade.' },
+      { month: 'Dezembro', title: 'Indicadores de Contratação 2026', text: 'Prazo médio de contratação reduziu de 87 para 52 dias, com taxa de impugnação em apenas 1,2% dos processos.' },
+    ]
+  },
+  {
+    sigla: 'UEDI',
+    name: 'Unidade de Empreendedorismo Feminino, Diversidade e Inclusão',
+    desc: 'Promove a equidade, a diversidade e a inclusão no Sebrae Nacional e no ecossistema empreendedor brasileiro, com foco especial no empreendedorismo feminino.',
+    timeline: [
+      { month: 'Março', title: 'Programa Elas Lideram', text: 'Lançamento do programa de aceleração de lideranças femininas, com 120 participantes na primeira turma e mentoras executivas.' },
+      { month: 'Maio', title: 'Índice de Diversidade Institucional', text: 'Publicação do primeiro Índice de Diversidade do Sebrae Nacional, com metas claras para representatividade até 2028.' },
+      { month: 'Julho', title: 'Semana da Diversidade 2026', text: 'Realização da Semana da Diversidade com 14 eventos, 3.200 participantes e painéis sobre raça, gênero e inclusão.' },
+      { month: 'Setembro', title: 'Parceria com Redes Femininas', text: 'Firmadas parcerias com 8 redes de empreendedoras para ampliar alcance de programas de capacitação e acesso a crédito.' },
+      { month: 'Novembro', title: 'Relatório de Impacto Social', text: 'Publicação do relatório de impacto demonstrando que programas da UEDI atingiram 42.000 mulheres empreendedoras em 2026.' },
+    ]
+  },
+];
+
+// ── PARTICLE BACKGROUND ──────────────────────────────────────────
+function createParticles() {
+  const layer = document.getElementById('particle-layer');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 3 + 1;
+    p.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      left: ${Math.random()*100}%;
+      animation-duration: ${Math.random()*20+15}s;
+      animation-delay: ${Math.random()*-20}s;
+      opacity: 0;
+    `;
+    layer.appendChild(p);
+  }
+}
+
+// ── CANVAS BACKGROUND ─────────────────────────────────────────────
+function initCanvas() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, lines;
+
+  function resize() {
+    W = canvas.width = canvas.offsetWidth;
+    H = canvas.height = canvas.offsetHeight;
+    generateLines();
+  }
+
+  function generateLines() {
+    lines = [];
+    const count = Math.floor((W * H) / 18000);
+    for (let i = 0; i < count; i++) {
+      lines.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+      });
+    }
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    // Draw grid dots
+    ctx.fillStyle = 'rgba(0,200,255,0.06)';
+    const step = 60;
+    for (let x = 0; x < W; x += step) {
+      for (let y = 0; y < H; y += step) {
+        ctx.beginPath();
+        ctx.arc(x, y, 1, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    // Move and draw floating points + connections
+    lines.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < 0 || p.x > W) p.vx *= -1;
+      if (p.y < 0 || p.y > H) p.vy *= -1;
+      ctx.fillStyle = 'rgba(0,200,255,0.25)';
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    // Draw connections
+    for (let i = 0; i < lines.length; i++) {
+      for (let j = i + 1; j < lines.length; j++) {
+        const dx = lines[i].x - lines[j].x;
+        const dy = lines[i].y - lines[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          const alpha = (1 - dist/120) * 0.12;
+          ctx.strokeStyle = `rgba(0,200,255,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.beginPath();
+          ctx.moveTo(lines[i].x, lines[i].y);
+          ctx.lineTo(lines[j].x, lines[j].y);
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  draw();
+}
+
+// ── SVG NETWORK ──────────────────────────────────────────────────
+function buildNetwork() {
+  const svg = document.getElementById('network-svg');
+  const W = svg.clientWidth || window.innerWidth;
+  const H = svg.clientHeight || window.innerHeight;
+
+  // Responsive node layout
+  const isMobile = W < 700;
+  const cx = W / 2, cy = H / 2;
+  const radiusX = isMobile ? Math.min(W, H) * 0.34 : Math.min(W * 0.36, 620);
+  const radiusY = isMobile ? Math.min(W, H) * 0.34 : H * 0.35;
+
+  // Center node (DAF)
+  const nodes = [
+    { id: 'center', label: 'DAF', x: cx, y: cy, r: isMobile ? 36 : 44, center: true }
+  ];
+
+  // 8 unit nodes in circle
+  units.forEach((u, i) => {
+    const angle = (i / units.length) * Math.PI * 2 - Math.PI / 2;
+    nodes.push({
+      id: u.sigla,
+      label: u.sigla,
+      x: cx + Math.cos(angle) * radiusX,
+      y: cy + Math.sin(angle) * radiusY,
+      r: isMobile ? 26 : 32,
+      unitIndex: i,
+    });
+  });
+
+  svg.innerHTML = '';
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  // Defs for glows
+  const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+  defs.innerHTML = `
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-strong" x="-80%" y="-80%" width="260%" height="260%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="node-grad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#1a6a8a"/>
+      <stop offset="100%" stop-color="#031424"/>
+    </radialGradient>
+    <radialGradient id="center-grad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#00aad4"/>
+      <stop offset="100%" stop-color="#003d5c"/>
+    </radialGradient>
+  `;
+  svg.appendChild(defs);
+
+  const center = nodes[0];
+
+  // Draw edges from center to each node
+  nodes.slice(1).forEach(n => {
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', center.x); line.setAttribute('y1', center.y);
+    line.setAttribute('x2', n.x); line.setAttribute('y2', n.y);
+    line.setAttribute('stroke', 'rgba(0,200,255,0.18)');
+    line.setAttribute('stroke-width', '1');
+    line.setAttribute('stroke-dasharray', '4 6');
+    svg.appendChild(line);
+
+    // Animated traveling dot
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    path.setAttribute('r', '3');
+    path.setAttribute('fill', '#00c8ff');
+    path.setAttribute('opacity', '0.7');
+    path.setAttribute('filter', 'url(#glow)');
+    const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animateMotion');
+    anim.setAttribute('dur', `${2 + Math.random() * 3}s`);
+    anim.setAttribute('repeatCount', 'indefinite');
+    anim.setAttribute('begin', `${Math.random() * 3}s`);
+    const mpath = document.createElementNS('http://www.w3.org/2000/svg', 'mpath');
+    const pathEl = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    const pid = `edge-path-${n.id}`;
+    pathEl.setAttribute('id', pid);
+    pathEl.setAttribute('d', `M${center.x},${center.y} L${n.x},${n.y}`);
+    pathEl.setAttribute('fill', 'none');
+    svg.appendChild(pathEl);
+    mpath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${pid}`);
+    anim.appendChild(mpath);
+    path.appendChild(anim);
+    svg.appendChild(path);
+  });
+
+  // Draw nodes
+  nodes.forEach((n, idx) => {
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'node-group');
+    g.setAttribute('transform', `translate(${n.x},${n.y})`);
+
+    // Pulse ring
+    const ringAnim = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    ringAnim.setAttribute('r', n.r + 12);
+    ringAnim.setAttribute('fill', 'none');
+    ringAnim.setAttribute('stroke', '#00c8ff');
+    ringAnim.setAttribute('stroke-width', '1');
+    ringAnim.setAttribute('opacity', '0');
+    const paAnim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    paAnim.setAttribute('attributeName', 'opacity');
+    paAnim.setAttribute('values', `0;0.5;0`);
+    paAnim.setAttribute('dur', `${2.5 + idx * 0.3}s`);
+    paAnim.setAttribute('repeatCount', 'indefinite');
+    paAnim.setAttribute('begin', `${idx * 0.3}s`);
+    const paAnim2 = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+    paAnim2.setAttribute('attributeName', 'r');
+    paAnim2.setAttribute('values', `${n.r};${n.r+20};${n.r}`);
+    paAnim2.setAttribute('dur', `${2.5 + idx * 0.3}s`);
+    paAnim2.setAttribute('repeatCount', 'indefinite');
+    paAnim2.setAttribute('begin', `${idx * 0.3}s`);
+    ringAnim.appendChild(paAnim);
+    ringAnim.appendChild(paAnim2);
+
+    // Main circle
+    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circle.setAttribute('r', n.r);
+    circle.setAttribute('fill', n.center ? 'url(#center-grad)' : 'url(#node-grad)');
+    circle.setAttribute('stroke', n.center ? '#00c8ff' : 'rgba(0,200,255,0.5)');
+    circle.setAttribute('stroke-width', n.center ? '2' : '1.5');
+    circle.setAttribute('filter', n.center ? 'url(#glow-strong)' : 'url(#glow)');
+
+    // Label
+    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'central');
+    text.setAttribute('fill', n.center ? '#00c8ff' : '#e8f4fd');
+    text.setAttribute('font-family', 'Figtree, sans-serif');
+    text.setAttribute('font-size', n.center ? (isMobile ? '11' : '13') : (isMobile ? '10' : '12'));
+    text.setAttribute('font-weight', '800');
+    text.setAttribute('letter-spacing', '0.06em');
+    text.textContent = n.label;
+
+    g.appendChild(ringAnim);
+    g.appendChild(circle);
+    g.appendChild(text);
+    svg.appendChild(g);
+
+    // Click handler
+    if (!n.center) {
+      g.addEventListener('click', () => openModal(n.unitIndex));
+      g.addEventListener('mouseenter', () => {
+        circle.setAttribute('stroke', '#00c8ff');
+        circle.setAttribute('stroke-width', '2.5');
+        circle.setAttribute('r', n.r + 4);
+        text.setAttribute('fill', '#00c8ff');
+      });
+      g.addEventListener('mouseleave', () => {
+        circle.setAttribute('stroke', 'rgba(0,200,255,0.5)');
+        circle.setAttribute('stroke-width', '1.5');
+        circle.setAttribute('r', n.r);
+        text.setAttribute('fill', '#e8f4fd');
+      });
+    }
+  });
+}
+
+// ── UNITS GRID ───────────────────────────────────────────────────
+function buildGrid() {
+  const grid = document.getElementById('units-grid');
+  units.forEach((u, i) => {
+    const card = document.createElement('div');
+    card.className = 'unit-card';
+    card.innerHTML = `
+      <div class="unit-card-sigla">${u.sigla}</div>
+      <div class="unit-card-name">${u.name}</div>
+      <div class="unit-card-arrow">→</div>
+    `;
+    card.addEventListener('click', () => openModal(i));
+    grid.appendChild(card);
+  });
+}
+
+// ── MODAL ────────────────────────────────────────────────────────
+const overlay = document.getElementById('modal-overlay');
+const modalClose = document.getElementById('modal-close-btn');
+
+function openModal(idx) {
+  const u = units[idx];
+  document.getElementById('modal-eyebrow').textContent = u.sigla + ' · DAF Sebrae Nacional';
+  document.getElementById('modal-title').textContent = u.name;
+  document.getElementById('modal-desc').textContent = u.desc;
+
+  const timeline = document.getElementById('modal-timeline');
+  // Keep the line
+  timeline.innerHTML = '<div class="timeline-line"></div>';
+
+  u.timeline.forEach((item, i) => {
+    const isLeft = i % 2 === 0;
+    const div = document.createElement('div');
+    div.className = 'timeline-item' + (isLeft ? ' left' : '');
+
+    const card = `
+      <div class="ti-card">
+        <div class="ti-month">${item.month}</div>
+        <div class="ti-title">${item.title}</div>
+        <div class="ti-text">${item.text}</div>
+      </div>
+    `;
+
+    if (isLeft) {
+      div.innerHTML = `
+        <div class="ti-left">${card}</div>
+        <div class="ti-dot-wrap"><div class="ti-dot"></div></div>
+        <div class="ti-empty"></div>
+      `;
+    } else {
+      div.innerHTML = `
+        <div class="ti-empty"></div>
+        <div class="ti-dot-wrap"><div class="ti-dot"></div></div>
+        <div class="ti-right">${card}</div>
+      `;
+    }
+    timeline.appendChild(div);
+  });
+
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Scroll modal to top
+  document.getElementById('modal').scrollTop = 0;
+}
+
+function closeModal() {
+  overlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── MOBILE TIMELINE ADAPTATION ────────────────────────────────────
+function fixMobileTimeline() {
+  if (window.innerWidth <= 768) {
+    const lefts = document.querySelectorAll('.ti-left');
+    lefts.forEach(el => {
+      // Move left content to right for mobile
+      const item = el.closest('.timeline-item');
+      const empty = item.querySelector('.ti-empty');
+      if (item && empty) {
+        const rightDiv = document.createElement('div');
+        rightDiv.className = 'ti-right';
+        rightDiv.innerHTML = el.innerHTML;
+        item.replaceChild(rightDiv, el);
+        empty.remove();
+      }
+    });
+  }
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+createParticles();
+initCanvas();
+buildNetwork();
+buildGrid();
+
+window.addEventListener('resize', () => {
+  buildNetwork();
+});
+
+// Intersection observer for about section fade-in
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) e.target.style.opacity = '1';
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.stat-item, .unit-card').forEach(el => {
+  el.style.transition = 'opacity 0.6s ease';
+  el.style.opacity = '0';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
