@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerenciador de Entregas</title>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #04111f;
+    --panel: #0a1f35;
+    --panel-2: #0f2742;
+    --line: rgba(0,200,255,0.18);
+    --accent: #00c8ff;
+    --text: #e8f4fd;
+    --muted: #86abc3;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: 'Figtree', sans-serif;
+    background: linear-gradient(180deg, #03101d, #061729);
+    color: var(--text);
+  }
+  .app {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 32px 20px 48px;
+  }
+  .topbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .title h1 {
+    margin: 0 0 6px;
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+  }
+  .title p {
+    margin: 0;
+    color: var(--muted);
+  }
+  .actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  button, select, input, textarea {
+    font: inherit;
+  }
+  button {
+    border: 1px solid var(--line);
+    background: rgba(0,200,255,0.08);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+  }
+  button.primary {
+    background: var(--accent);
+    color: #052035;
+    font-weight: 800;
+  }
+  .layout {
+    display: grid;
+    grid-template-columns: 320px minmax(0, 1fr);
+    gap: 20px;
+  }
+  .panel {
+    background: rgba(10,31,53,0.88);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 18px;
+  }
+  .panel h2, .panel h3 {
+    margin: 0 0 14px;
+  }
+  .unit-list {
+    display: grid;
+    gap: 10px;
+  }
+  .unit-btn {
+    width: 100%;
+    text-align: left;
+    background: rgba(255,255,255,0.03);
+  }
+  .unit-btn.active {
+    border-color: rgba(0,200,255,0.45);
+    background: rgba(0,200,255,0.12);
+  }
+  .unit-btn strong {
+    display: block;
+    font-size: 1rem;
+  }
+  .unit-btn span {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .form-grid {
+    display: grid;
+    gap: 12px;
+  }
+  label {
+    display: grid;
+    gap: 6px;
+    color: var(--muted);
+    font-size: 0.92rem;
+  }
+  input, textarea, select {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid rgba(0,200,255,0.14);
+    background: var(--panel-2);
+    color: var(--text);
+    padding: 11px 12px;
+  }
+  textarea {
+    min-height: 110px;
+    resize: vertical;
+  }
+  .timeline-list {
+    display: grid;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .timeline-item {
+    border: 1px solid rgba(0,200,255,0.12);
+    background: rgba(255,255,255,0.02);
+    border-radius: 14px;
+    padding: 14px;
+  }
+  .timeline-item h4 {
+    margin: 0 0 4px;
+    font-size: 1rem;
+  }
+  .timeline-item small {
+    color: var(--accent);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .timeline-item p {
+    margin: 10px 0 0;
+    color: var(--muted);
+    line-height: 1.55;
+  }
+  .timeline-actions, .editor-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .editor {
+    margin-top: 18px;
+    border-top: 1px solid var(--line);
+    padding-top: 18px;
+  }
+  .preview-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(0,200,255,0.14);
+    margin-top: 8px;
+  }
+  .status {
+    margin-top: 12px;
+    color: var(--accent);
+    font-size: 0.92rem;
+    min-height: 20px;
+  }
+  .helper {
+    margin-top: 18px;
+    color: var(--muted);
+    line-height: 1.55;
+    font-size: 0.92rem;
+  }
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <div class="app">
+    <div class="topbar">
+      <div class="title">
+        <h1>Gerenciador de Entregas</h1>
+        <p>Edite o conteúdo das modais e publique no próprio navegador.</p>
+      </div>
+      <div class="actions">
+        <button id="reset-btn">Restaurar padrão</button>
+        <button id="export-btn">Exportar JSON</button>
+        <button class="primary" id="open-site-btn">Abrir site</button>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="panel">
+        <h2>Unidades</h2>
+        <div class="unit-list" id="unit-list"></div>
+        <div class="helper">
+          As alterações ficam salvas no navegador deste dispositivo. O site principal passa a usar esse conteúdo automaticamente.
+        </div>
+      </aside>
+
+      <main class="panel">
+        <h2 id="unit-title"></h2>
+        <div class="form-grid">
+          <label>Sigla
+            <input id="unit-sigla" type="text">
+          </label>
+          <label>Nome da unidade
+            <input id="unit-name" type="text">
+          </label>
+          <label>Descrição da unidade
+            <textarea id="unit-desc"></textarea>
+          </label>
+        </div>
+        <div class="editor-actions">
+          <button class="primary" id="save-unit-btn">Salvar unidade</button>
+          <button id="add-entry-btn">Nova entrega</button>
+        </div>
+
+        <div class="timeline-list" id="timeline-list"></div>
+
+        <section class="editor">
+          <h3 id="entry-editor-title">Selecione uma entrega</h3>
+          <div class="form-grid">
+            <label>Mês
+              <input id="entry-month" type="text">
+            </label>
+            <label>Título
+              <input id="entry-title" type="text">
+            </label>
+            <label>Texto
+              <textarea id="entry-text"></textarea>
+            </label>
+            <label>Imagem
+              <input id="entry-image" type="text" placeholder="assets/imagem.png ou URL">
+            </label>
+            <label>Texto alternativo da imagem
+              <input id="entry-image-alt" type="text">
+            </label>
+          </div>
+          <img id="entry-preview" class="preview-image" alt="" hidden>
+          <div class="editor-actions">
+            <button class="primary" id="save-entry-btn">Salvar entrega</button>
+            <button id="duplicate-entry-btn">Duplicar entrega</button>
+            <button id="delete-entry-btn">Excluir entrega</button>
+          </div>
+          <div class="status" id="status"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+<script src="entregas-data.js"></script>
+<script>
+  const STORAGE_KEY = 'daf-entregas-custom-data';
+  let units = loadUnits();
+  let activeUnitIndex = 0;
+  let activeEntryIndex = 0;
+
+  const unitList = document.getElementById('unit-list');
+  const timelineList = document.getElementById('timeline-list');
+  const statusEl = document.getElementById('status');
+  const previewEl = document.getElementById('entry-preview');
+
+  function cloneDefaultUnits() {
+    return JSON.parse(JSON.stringify(window.DEFAULT_UNITS_DATA || []));
+  }
+
+  function loadUnits() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (error) {}
+    return cloneDefaultUnits();
+  }
+
+  function persistUnits(message) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(units));
+    statusEl.textContent = message || 'Alterações salvas.';
+  }
+
+  function renderUnits() {
+    unitList.innerHTML = '';
+    units.forEach((unit, index) => {
+      const button = document.createElement('button');
+      button.className = 'unit-btn' + (index === activeUnitIndex ? ' active' : '');
+      button.innerHTML = `<strong>${unit.sigla}</strong><span>${unit.name}</span>`;
+      button.addEventListener('click', () => {
+        activeUnitIndex = index;
+        activeEntryIndex = 0;
+        render();
+      });
+      unitList.appendChild(button);
+    });
+  }
+
+  function renderUnitForm() {
+    const unit = units[activeUnitIndex];
+    document.getElementById('unit-title').textContent = unit.name;
+    document.getElementById('unit-sigla').value = unit.sigla || '';
+    document.getElementById('unit-name').value = unit.name || '';
+    document.getElementById('unit-desc').value = unit.desc || '';
+  }
+
+  function renderTimelineList() {
+    const unit = units[activeUnitIndex];
+    timelineList.innerHTML = '';
+    unit.timeline.forEach((item, index) => {
+      const article = document.createElement('article');
+      article.className = 'timeline-item';
+      article.innerHTML = `
+        <small>${item.month || 'Sem mes'}</small>
+        <h4>${item.title || 'Sem titulo'}</h4>
+        <p>${item.text || ''}</p>
+        <div class="timeline-actions">
+          <button data-edit="${index}">Editar</button>
+          <button data-up="${index}">Subir</button>
+          <button data-down="${index}">Descer</button>
+        </div>
+      `;
+      timelineList.appendChild(article);
+    });
+
+    timelineList.querySelectorAll('[data-edit]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activeEntryIndex = Number(btn.dataset.edit);
+        renderEntryEditor();
+      });
+    });
+    timelineList.querySelectorAll('[data-up]').forEach(btn => {
+      btn.addEventListener('click', () => moveEntry(Number(btn.dataset.up), -1));
+    });
+    timelineList.querySelectorAll('[data-down]').forEach(btn => {
+      btn.addEventListener('click', () => moveEntry(Number(btn.dataset.down), 1));
+    });
+  }
+
+  function renderEntryEditor() {
+    const unit = units[activeUnitIndex];
+    const item = unit.timeline[activeEntryIndex];
+    document.getElementById('entry-editor-title').textContent = item ? `Editando entrega ${activeEntryIndex + 1}` : 'Selecione uma entrega';
+    document.getElementById('entry-month').value = item?.month || '';
+    document.getElementById('entry-title').value = item?.title || '';
+    document.getElementById('entry-text').value = item?.text || '';
+    document.getElementById('entry-image').value = item?.image || '';
+    document.getElementById('entry-image-alt').value = item?.imageAlt || '';
+    if (item?.image) {
+      previewEl.src = item.image;
+      previewEl.alt = item.imageAlt || item.title || '';
+      previewEl.hidden = false;
+    } else {
+      previewEl.hidden = true;
+      previewEl.removeAttribute('src');
+    }
+  }
+
+  function render() {
+    renderUnits();
+    renderUnitForm();
+    renderTimelineList();
+    renderEntryEditor();
+  }
+
+  function moveEntry(index, direction) {
+    const unit = units[activeUnitIndex];
+    const target = index + direction;
+    if (target < 0 || target >= unit.timeline.length) return;
+    const swap = unit.timeline[index];
+    unit.timeline[index] = unit.timeline[target];
+    unit.timeline[target] = swap;
+    activeEntryIndex = target;
+    persistUnits('Ordem atualizada.');
+    render();
+  }
+
+  document.getElementById('save-unit-btn').addEventListener('click', () => {
+    const unit = units[activeUnitIndex];
+    unit.sigla = document.getElementById('unit-sigla').value.trim();
+    unit.name = document.getElementById('unit-name').value.trim();
+    unit.desc = document.getElementById('unit-desc').value.trim();
+    persistUnits('Unidade salva.');
+    render();
+  });
+
+  document.getElementById('add-entry-btn').addEventListener('click', () => {
+    units[activeUnitIndex].timeline.push({
+      month: 'Novo mes',
+      title: 'Nova entrega',
+      text: '',
+      image: '',
+      imageAlt: ''
+    });
+    activeEntryIndex = units[activeUnitIndex].timeline.length - 1;
+    persistUnits('Nova entrega criada.');
+    render();
+  });
+
+  document.getElementById('save-entry-btn').addEventListener('click', () => {
+    const unit = units[activeUnitIndex];
+    const item = unit.timeline[activeEntryIndex];
+    if (!item) return;
+    item.month = document.getElementById('entry-month').value.trim();
+    item.title = document.getElementById('entry-title').value.trim();
+    item.text = document.getElementById('entry-text').value.trim();
+    item.image = document.getElementById('entry-image').value.trim();
+    item.imageAlt = document.getElementById('entry-image-alt').value.trim();
+    if (!item.image) {
+      delete item.image;
+      delete item.imageAlt;
+    }
+    persistUnits('Entrega salva.');
+    render();
+  });
+
+  document.getElementById('duplicate-entry-btn').addEventListener('click', () => {
+    const unit = units[activeUnitIndex];
+    const item = unit.timeline[activeEntryIndex];
+    if (!item) return;
+    unit.timeline.splice(activeEntryIndex + 1, 0, JSON.parse(JSON.stringify(item)));
+    activeEntryIndex += 1;
+    persistUnits('Entrega duplicada.');
+    render();
+  });
+
+  document.getElementById('delete-entry-btn').addEventListener('click', () => {
+    const unit = units[activeUnitIndex];
+    if (!unit.timeline.length) return;
+    unit.timeline.splice(activeEntryIndex, 1);
+    activeEntryIndex = Math.max(0, activeEntryIndex - 1);
+    persistUnits('Entrega removida.');
+    render();
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', () => {
+    localStorage.removeItem(STORAGE_KEY);
+    units = cloneDefaultUnits();
+    activeUnitIndex = 0;
+    activeEntryIndex = 0;
+    statusEl.textContent = 'Conteudo padrao restaurado.';
+    render();
+  });
+
+  document.getElementById('export-btn').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(units, null, 2)], { type: 'application/json' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'entregas.json';
+    link.click();
+    URL.revokeObjectURL(link.href);
+    statusEl.textContent = 'Arquivo JSON exportado.';
+  });
+
+  document.getElementById('open-site-btn').addEventListener('click', () => {
+    window.location.href = 'index.html';
+  });
+
+  render();
+</script>
+</body>
+</html>
