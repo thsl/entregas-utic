@@ -189,7 +189,7 @@
     <div class="topbar">
       <div class="title">
         <h1>Gerenciador de Entregas</h1>
-        <p>Edite o conteúdo das modais e publique no próprio navegador.</p>
+        <p>Edite o conteúdo das modais e publique de forma definitiva no projeto.</p>
       </div>
       <div class="actions">
         <button id="reset-btn">Restaurar padrão</button>
@@ -203,7 +203,7 @@
         <h2>Unidades</h2>
         <div class="unit-list" id="unit-list"></div>
         <div class="helper">
-          As alterações ficam salvas no navegador deste dispositivo. O site principal passa a usar esse conteúdo automaticamente.
+          Use esta tela pelo servidor local. As alterações são gravadas no arquivo real de conteúdo e refletidas no site principal.
         </div>
       </aside>
 
@@ -260,8 +260,8 @@
 
 <script src="entregas-data.js"></script>
 <script>
-  const STORAGE_KEY = 'daf-entregas-custom-data';
-  let units = loadUnits();
+  const API_URL = '/api/content';
+  let units = [];
   let activeUnitIndex = 0;
   let activeEntryIndex = 0;
 
@@ -274,16 +274,26 @@
     return JSON.parse(JSON.stringify(window.DEFAULT_UNITS_DATA || []));
   }
 
-  function loadUnits() {
+  async function loadUnits() {
     try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (error) {}
-    return cloneDefaultUnits();
+      const response = await fetch(API_URL, { cache: 'no-store' });
+      if (!response.ok) throw new Error('Falha ao carregar conteúdo.');
+      return await response.json();
+    } catch (error) {
+      statusEl.textContent = 'Usando conteúdo padrão enquanto o servidor não responde.';
+      return cloneDefaultUnits();
+    }
   }
 
-  function persistUnits(message) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(units));
+  async function persistUnits(message) {
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(units)
+    });
+    if (!response.ok) {
+      throw new Error('Não foi possível salvar o conteúdo.');
+    }
     statusEl.textContent = message || 'Alterações salvas.';
   }
 
@@ -304,6 +314,7 @@
 
   function renderUnitForm() {
     const unit = units[activeUnitIndex];
+    if (!unit) return;
     document.getElementById('unit-title').textContent = unit.name;
     document.getElementById('unit-sigla').value = unit.sigla || '';
     document.getElementById('unit-name').value = unit.name || '';
@@ -312,6 +323,7 @@
 
   function renderTimelineList() {
     const unit = units[activeUnitIndex];
+    if (!unit) return;
     timelineList.innerHTML = '';
     unit.timeline.forEach((item, index) => {
       const article = document.createElement('article');
@@ -363,13 +375,14 @@
   }
 
   function render() {
+    if (!units.length) return;
     renderUnits();
     renderUnitForm();
     renderTimelineList();
     renderEntryEditor();
   }
 
-  function moveEntry(index, direction) {
+  async function moveEntry(index, direction) {
     const unit = units[activeUnitIndex];
     const target = index + direction;
     if (target < 0 || target >= unit.timeline.length) return;
@@ -377,75 +390,98 @@
     unit.timeline[index] = unit.timeline[target];
     unit.timeline[target] = swap;
     activeEntryIndex = target;
-    persistUnits('Ordem atualizada.');
+    await persistUnits('Ordem atualizada.');
     render();
   }
 
-  document.getElementById('save-unit-btn').addEventListener('click', () => {
-    const unit = units[activeUnitIndex];
-    unit.sigla = document.getElementById('unit-sigla').value.trim();
-    unit.name = document.getElementById('unit-name').value.trim();
-    unit.desc = document.getElementById('unit-desc').value.trim();
-    persistUnits('Unidade salva.');
-    render();
-  });
-
-  document.getElementById('add-entry-btn').addEventListener('click', () => {
-    units[activeUnitIndex].timeline.push({
-      month: 'Novo mes',
-      title: 'Nova entrega',
-      text: '',
-      image: '',
-      imageAlt: ''
-    });
-    activeEntryIndex = units[activeUnitIndex].timeline.length - 1;
-    persistUnits('Nova entrega criada.');
-    render();
-  });
-
-  document.getElementById('save-entry-btn').addEventListener('click', () => {
-    const unit = units[activeUnitIndex];
-    const item = unit.timeline[activeEntryIndex];
-    if (!item) return;
-    item.month = document.getElementById('entry-month').value.trim();
-    item.title = document.getElementById('entry-title').value.trim();
-    item.text = document.getElementById('entry-text').value.trim();
-    item.image = document.getElementById('entry-image').value.trim();
-    item.imageAlt = document.getElementById('entry-image-alt').value.trim();
-    if (!item.image) {
-      delete item.image;
-      delete item.imageAlt;
+  document.getElementById('save-unit-btn').addEventListener('click', async () => {
+    try {
+      const unit = units[activeUnitIndex];
+      unit.sigla = document.getElementById('unit-sigla').value.trim();
+      unit.name = document.getElementById('unit-name').value.trim();
+      unit.desc = document.getElementById('unit-desc').value.trim();
+      await persistUnits('Unidade salva.');
+      render();
+    } catch (error) {
+      statusEl.textContent = error.message;
     }
-    persistUnits('Entrega salva.');
-    render();
   });
 
-  document.getElementById('duplicate-entry-btn').addEventListener('click', () => {
-    const unit = units[activeUnitIndex];
-    const item = unit.timeline[activeEntryIndex];
-    if (!item) return;
-    unit.timeline.splice(activeEntryIndex + 1, 0, JSON.parse(JSON.stringify(item)));
-    activeEntryIndex += 1;
-    persistUnits('Entrega duplicada.');
-    render();
+  document.getElementById('add-entry-btn').addEventListener('click', async () => {
+    try {
+      units[activeUnitIndex].timeline.push({
+        month: 'Novo mes',
+        title: 'Nova entrega',
+        text: '',
+        image: '',
+        imageAlt: ''
+      });
+      activeEntryIndex = units[activeUnitIndex].timeline.length - 1;
+      await persistUnits('Nova entrega criada.');
+      render();
+    } catch (error) {
+      statusEl.textContent = error.message;
+    }
   });
 
-  document.getElementById('delete-entry-btn').addEventListener('click', () => {
-    const unit = units[activeUnitIndex];
-    if (!unit.timeline.length) return;
-    unit.timeline.splice(activeEntryIndex, 1);
-    activeEntryIndex = Math.max(0, activeEntryIndex - 1);
-    persistUnits('Entrega removida.');
-    render();
+  document.getElementById('save-entry-btn').addEventListener('click', async () => {
+    try {
+      const unit = units[activeUnitIndex];
+      const item = unit.timeline[activeEntryIndex];
+      if (!item) return;
+      item.month = document.getElementById('entry-month').value.trim();
+      item.title = document.getElementById('entry-title').value.trim();
+      item.text = document.getElementById('entry-text').value.trim();
+      item.image = document.getElementById('entry-image').value.trim();
+      item.imageAlt = document.getElementById('entry-image-alt').value.trim();
+      if (!item.image) {
+        delete item.image;
+        delete item.imageAlt;
+      }
+      await persistUnits('Entrega salva.');
+      render();
+    } catch (error) {
+      statusEl.textContent = error.message;
+    }
   });
 
-  document.getElementById('reset-btn').addEventListener('click', () => {
-    localStorage.removeItem(STORAGE_KEY);
-    units = cloneDefaultUnits();
-    activeUnitIndex = 0;
-    activeEntryIndex = 0;
-    statusEl.textContent = 'Conteudo padrao restaurado.';
-    render();
+  document.getElementById('duplicate-entry-btn').addEventListener('click', async () => {
+    try {
+      const unit = units[activeUnitIndex];
+      const item = unit.timeline[activeEntryIndex];
+      if (!item) return;
+      unit.timeline.splice(activeEntryIndex + 1, 0, JSON.parse(JSON.stringify(item)));
+      activeEntryIndex += 1;
+      await persistUnits('Entrega duplicada.');
+      render();
+    } catch (error) {
+      statusEl.textContent = error.message;
+    }
+  });
+
+  document.getElementById('delete-entry-btn').addEventListener('click', async () => {
+    try {
+      const unit = units[activeUnitIndex];
+      if (!unit.timeline.length) return;
+      unit.timeline.splice(activeEntryIndex, 1);
+      activeEntryIndex = Math.max(0, activeEntryIndex - 1);
+      await persistUnits('Entrega removida.');
+      render();
+    } catch (error) {
+      statusEl.textContent = error.message;
+    }
+  });
+
+  document.getElementById('reset-btn').addEventListener('click', async () => {
+    try {
+      units = cloneDefaultUnits();
+      activeUnitIndex = 0;
+      activeEntryIndex = 0;
+      await persistUnits('Conteudo padrao restaurado.');
+      render();
+    } catch (error) {
+      statusEl.textContent = error.message;
+    }
   });
 
   document.getElementById('export-btn').addEventListener('click', () => {
@@ -462,7 +498,12 @@
     window.location.href = 'index.html';
   });
 
-  render();
+  async function init() {
+    units = await loadUnits();
+    render();
+  }
+
+  init();
 </script>
 </body>
 </html>

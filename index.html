@@ -726,17 +726,16 @@
 <script src="entregas-data.js"></script>
 <script>
 // ── DATA ─────────────────────────────────────────────────────────
-const STORAGE_KEY = 'daf-entregas-custom-data';
+let units = [];
 
-function loadUnitsData() {
+async function loadUnitsData() {
   try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) return JSON.parse(saved);
+    const response = await fetch('/api/content', { cache: 'no-store' });
+    if (!response.ok) throw new Error('Falha ao carregar o conteúdo.');
+    return await response.json();
   } catch (error) {}
   return JSON.parse(JSON.stringify(window.DEFAULT_UNITS_DATA || []));
 }
-
-const units = loadUnitsData();
 
 // ── PARTICLE BACKGROUND ──────────────────────────────────────────
 function createParticles() {
@@ -993,6 +992,7 @@ function buildNetwork() {
 // ── UNITS GRID ───────────────────────────────────────────────────
 function buildGrid() {
   const grid = document.getElementById('units-grid');
+  grid.innerHTML = '';
   units.forEach((u, i) => {
     const card = document.createElement('div');
     card.className = 'unit-card';
@@ -1161,26 +1161,34 @@ window.addEventListener('popstate', () => {
 });
 
 // ── INIT ─────────────────────────────────────────────────────────
-createParticles();
-initCanvas();
-buildNetwork();
-buildGrid();
-
-window.addEventListener('resize', () => {
-  buildNetwork();
-});
-
-// Intersection observer for about section fade-in
 const observer = new IntersectionObserver(entries => {
   entries.forEach(e => {
     if (e.isIntersecting) e.target.style.opacity = '1';
   });
 }, { threshold: 0.1 });
-document.querySelectorAll('.stat-item, .unit-card').forEach(el => {
-  el.style.transition = 'opacity 0.6s ease';
-  el.style.opacity = '0';
-  observer.observe(el);
+
+function observeCards() {
+  document.querySelectorAll('.stat-item, .unit-card').forEach(el => {
+    el.style.transition = 'opacity 0.6s ease';
+    el.style.opacity = '0';
+    observer.observe(el);
+  });
+}
+
+async function initApp() {
+  units = await loadUnitsData();
+  createParticles();
+  initCanvas();
+  buildNetwork();
+  buildGrid();
+  observeCards();
+}
+
+window.addEventListener('resize', () => {
+  buildNetwork();
 });
+
+initApp();
 </script>
 </body>
 </html>
