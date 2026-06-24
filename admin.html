@@ -10,108 +10,85 @@
     --bg: #04111f;
     --panel: #0a1f35;
     --panel-2: #0f2742;
+    --panel-3: #13304f;
     --line: rgba(0,200,255,0.18);
+    --line-strong: rgba(0,200,255,0.34);
     --accent: #00c8ff;
     --text: #e8f4fd;
     --muted: #86abc3;
+    --danger: #ff6b6b;
   }
+
   * { box-sizing: border-box; }
+
   body {
     margin: 0;
     font-family: 'Figtree', sans-serif;
     background: linear-gradient(180deg, #03101d, #061729);
     color: var(--text);
   }
-  .app {
-    max-width: 1240px;
-    margin: 0 auto;
-    padding: 32px 20px 48px;
+
+  button, select, input, textarea {
+    font: inherit;
   }
+
+  .app {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 28px 20px 44px;
+  }
+
   .topbar {
     display: flex;
     justify-content: space-between;
+    align-items: flex-start;
     gap: 16px;
-    align-items: center;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
     flex-wrap: wrap;
   }
+
   .title h1 {
     margin: 0 0 6px;
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-size: clamp(1.7rem, 3vw, 2.5rem);
   }
+
   .title p {
     margin: 0;
     color: var(--muted);
+    max-width: 760px;
+    line-height: 1.55;
   }
+
   .actions {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
   }
-  button, select, input, textarea {
-    font: inherit;
-  }
-  button {
-    border: 1px solid var(--line);
-    background: rgba(0,200,255,0.08);
-    color: var(--text);
-    padding: 10px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-  }
-  button.primary {
-    background: var(--accent);
-    color: #052035;
-    font-weight: 800;
-  }
-  .layout {
-    display: grid;
-    grid-template-columns: 320px minmax(0, 1fr);
-    gap: 20px;
-  }
+
   .panel {
-    background: rgba(10,31,53,0.88);
+    background: rgba(10,31,53,0.9);
     border: 1px solid var(--line);
     border-radius: 18px;
     padding: 18px;
+    box-shadow: 0 22px 50px rgba(0,0,0,0.18);
   }
-  .panel h2, .panel h3 {
-    margin: 0 0 14px;
-  }
-  .unit-list {
+
+  .toolbar {
     display: grid;
-    gap: 10px;
-  }
-  .unit-btn {
-    width: 100%;
-    text-align: left;
-    background: rgba(255,255,255,0.03);
-  }
-  .unit-btn.active {
-    border-color: rgba(0,200,255,0.45);
-    background: rgba(0,200,255,0.12);
-  }
-  .unit-btn strong {
-    display: block;
-    font-size: 1rem;
-  }
-  .unit-btn span {
-    display: block;
-    font-size: 0.9rem;
-    color: var(--muted);
-    margin-top: 4px;
-  }
-  .form-grid {
-    display: grid;
+    grid-template-columns: 220px 180px minmax(260px, 1fr) auto;
     gap: 12px;
+    align-items: end;
+    margin-bottom: 16px;
   }
+
   label {
     display: grid;
     gap: 6px;
     color: var(--muted);
     font-size: 0.92rem;
   }
-  input, textarea, select {
+
+  input, select, textarea {
     width: 100%;
     border-radius: 10px;
     border: 1px solid rgba(0,200,255,0.14);
@@ -119,68 +96,262 @@
     color: var(--text);
     padding: 11px 12px;
   }
+
   textarea {
-    min-height: 110px;
+    min-height: 120px;
     resize: vertical;
   }
-  .timeline-list {
-    display: grid;
-    gap: 12px;
-    margin-top: 20px;
+
+  button {
+    border: 1px solid var(--line);
+    background: rgba(0,200,255,0.08);
+    color: var(--text);
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
   }
-  .timeline-item {
-    border: 1px solid rgba(0,200,255,0.12);
-    background: rgba(255,255,255,0.02);
+
+  button:hover {
+    border-color: var(--line-strong);
+    background: rgba(0,200,255,0.14);
+  }
+
+  button.primary {
+    background: var(--accent);
+    border-color: transparent;
+    color: #06273e;
+    font-weight: 800;
+  }
+
+  button.danger {
+    background: rgba(255,107,107,0.12);
+    border-color: rgba(255,107,107,0.28);
+    color: #ffd0d0;
+  }
+
+  .table-shell {
+    overflow: auto;
+    border: 1px solid var(--line);
     border-radius: 14px;
-    padding: 14px;
   }
-  .timeline-item h4 {
-    margin: 0 0 4px;
-    font-size: 1rem;
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 880px;
   }
-  .timeline-item small {
-    color: var(--accent);
+
+  thead th {
+    text-align: left;
+    font-size: 0.82rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    color: var(--muted);
+    background: rgba(255,255,255,0.02);
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--line);
   }
-  .timeline-item p {
-    margin: 10px 0 0;
+
+  tbody td {
+    padding: 16px;
+    vertical-align: top;
+    border-bottom: 1px solid rgba(0,200,255,0.08);
+  }
+
+  tbody tr:hover {
+    background: rgba(255,255,255,0.02);
+  }
+
+  .entry-title {
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .entry-text {
     color: var(--muted);
     line-height: 1.55;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
-  .timeline-actions, .editor-actions {
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: rgba(0,200,255,0.06);
+    font-size: 0.88rem;
+    color: var(--text);
+  }
+
+  .row-actions {
     display: flex;
     gap: 8px;
     flex-wrap: wrap;
-    margin-top: 12px;
   }
-  .editor {
-    margin-top: 18px;
-    border-top: 1px solid var(--line);
-    padding-top: 18px;
+
+  .statusbar {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    margin-top: 14px;
+    flex-wrap: wrap;
   }
-  .preview-image {
-    width: 100%;
-    max-height: 220px;
-    object-fit: cover;
-    border-radius: 12px;
-    border: 1px solid rgba(0,200,255,0.14);
-    margin-top: 8px;
-  }
+
   .status {
-    margin-top: 12px;
     color: var(--accent);
     font-size: 0.92rem;
     min-height: 20px;
   }
+
   .helper {
-    margin-top: 18px;
     color: var(--muted);
-    line-height: 1.55;
     font-size: 0.92rem;
   }
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; }
+
+  .empty {
+    padding: 34px 18px;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(1,10,18,0.78);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+    z-index: 1000;
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .modal {
+    width: min(760px, 100%);
+    max-height: 92vh;
+    overflow: auto;
+    background: linear-gradient(180deg, #0a1f35, #09192b);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.32);
+  }
+
+  .modal.small {
+    width: min(480px, 100%);
+  }
+
+  .modal-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 18px;
+  }
+
+  .modal-head h2 {
+    margin: 0 0 6px;
+    font-size: 1.3rem;
+  }
+
+  .modal-head p {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .modal-grid .full {
+    grid-column: 1 / -1;
+  }
+
+  .image-upload {
+    display: grid;
+    gap: 10px;
+  }
+
+  .image-upload-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .image-file-name {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .preview-image {
+    width: 100%;
+    max-height: 240px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid rgba(0,200,255,0.14);
+  }
+
+  .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  @media (max-width: 960px) {
+    .toolbar {
+      grid-template-columns: 1fr 1fr;
+    }
+    .toolbar .search {
+      grid-column: 1 / -1;
+    }
+    .toolbar .new-btn {
+      grid-column: 1 / -1;
+    }
+  }
+
+  @media (max-width: 720px) {
+    .app {
+      padding-left: 14px;
+      padding-right: 14px;
+    }
+    .toolbar {
+      grid-template-columns: 1fr;
+    }
+    .modal-grid {
+      grid-template-columns: 1fr;
+    }
   }
 </style>
 </head>
@@ -189,299 +360,493 @@
     <div class="topbar">
       <div class="title">
         <h1>Gerenciador de Entregas</h1>
-        <p>Edite o conteúdo das modais e publique de forma definitiva no projeto.</p>
+        <p>Edite, filtre e publique as entregas. Em ambiente com backend, o salvamento é definitivo. Em ambiente estático, você pode exportar o JSON e publicar o arquivo atualizado.</p>
       </div>
       <div class="actions">
         <button id="reset-btn">Restaurar padrão</button>
+        <button id="import-btn">Importar JSON</button>
         <button id="export-btn">Exportar JSON</button>
         <button class="primary" id="open-site-btn">Abrir site</button>
       </div>
     </div>
 
-    <div class="layout">
-      <aside class="panel">
-        <h2>Unidades</h2>
-        <div class="unit-list" id="unit-list"></div>
-        <div class="helper">
-          Use esta tela pelo servidor local. As alterações são gravadas no arquivo real de conteúdo e refletidas no site principal.
-        </div>
-      </aside>
+    <section class="panel">
+      <div class="toolbar">
+        <label>Gerência
+          <select id="filter-unit"></select>
+        </label>
+        <label>Mês
+          <select id="filter-month"></select>
+        </label>
+        <label class="search">Busca
+          <input id="filter-search" type="text" placeholder="Buscar por título, texto ou gerência">
+        </label>
+        <button class="primary new-btn" id="add-entry-btn">Nova entrega</button>
+      </div>
 
-      <main class="panel">
-        <h2 id="unit-title"></h2>
-        <div class="form-grid">
-          <label>Sigla
-            <input id="unit-sigla" type="text">
-          </label>
-          <label>Nome da unidade
-            <input id="unit-name" type="text">
-          </label>
-          <label>Descrição da unidade
-            <textarea id="unit-desc"></textarea>
-          </label>
-        </div>
-        <div class="editor-actions">
-          <button class="primary" id="save-unit-btn">Salvar unidade</button>
-          <button id="add-entry-btn">Nova entrega</button>
-        </div>
+      <div class="table-shell">
+        <table>
+          <thead>
+            <tr>
+              <th>Entrega</th>
+              <th>Mês</th>
+              <th>Gerência</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+        <div class="empty" id="table-empty" hidden>Nenhuma entrega encontrada com os filtros atuais.</div>
+      </div>
 
-        <div class="timeline-list" id="timeline-list"></div>
+      <div class="statusbar">
+        <div class="status" id="status"></div>
+        <div class="helper" id="helper"></div>
+      </div>
+    </section>
+  </div>
 
-        <section class="editor">
-          <h3 id="entry-editor-title">Selecione uma entrega</h3>
-          <div class="form-grid">
-            <label>Mês
-              <input id="entry-month" type="text">
-            </label>
-            <label>Título
-              <input id="entry-title" type="text">
-            </label>
-            <label>Texto
-              <textarea id="entry-text"></textarea>
-            </label>
-            <label>Imagem
-              <input id="entry-image" type="text" placeholder="assets/imagem.png ou URL">
-            </label>
-            <label>Texto alternativo da imagem
-              <input id="entry-image-alt" type="text">
-            </label>
+  <div class="modal-overlay" id="editor-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="editor-title">
+      <div class="modal-head">
+        <div>
+          <h2 id="editor-title">Editar entrega</h2>
+          <p id="editor-subtitle">Atualize os dados da entrega e salve para refletir na tabela.</p>
+        </div>
+        <button id="close-editor-btn" aria-label="Fechar">&times;</button>
+      </div>
+
+      <div class="modal-grid">
+        <label>Gerência
+          <select id="entry-unit"></select>
+        </label>
+        <label>Mês
+          <input id="entry-month" type="text" placeholder="Ex.: Janeiro">
+        </label>
+        <label class="full">Título
+          <input id="entry-title" type="text">
+        </label>
+        <label class="full">Texto
+          <textarea id="entry-text"></textarea>
+        </label>
+        <div class="full image-upload">
+          <label>Imagem</label>
+          <div class="image-upload-row">
+            <button id="image-upload-btn" type="button">Selecionar imagem</button>
+            <button id="image-remove-btn" type="button">Remover imagem</button>
+            <span class="image-file-name" id="image-file-name">Nenhuma imagem selecionada</span>
           </div>
+          <input id="entry-image-file" class="sr-only" type="file" accept="image/*">
           <img id="entry-preview" class="preview-image" alt="" hidden>
-          <div class="editor-actions">
-            <button class="primary" id="save-entry-btn">Salvar entrega</button>
-            <button id="duplicate-entry-btn">Duplicar entrega</button>
-            <button id="delete-entry-btn">Excluir entrega</button>
-          </div>
-          <div class="status" id="status"></div>
-        </section>
-      </main>
+        </div>
+        <label class="full">Texto alternativo da imagem
+          <input id="entry-image-alt" type="text">
+        </label>
+      </div>
+
+      <div class="modal-actions">
+        <button id="cancel-editor-btn" type="button">Cancelar</button>
+        <button class="primary" id="save-entry-btn" type="button">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="confirm-overlay" aria-hidden="true">
+    <div class="modal small" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+      <div class="modal-head">
+        <div>
+          <h2 id="confirm-title">Excluir entrega</h2>
+          <p id="confirm-text">Confirme para remover esta entrega.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="cancel-delete-btn" type="button">Cancelar</button>
+        <button class="danger" id="confirm-delete-btn" type="button">Confirmar exclusão</button>
+      </div>
     </div>
   </div>
 
 <script src="entregas-data.js"></script>
 <script>
-  const API_URL = '/api/content';
-  let units = [];
-  let activeUnitIndex = 0;
-  let activeEntryIndex = 0;
+  const API_URL = 'api/content';
+  const IMAGE_UPLOAD_URL = 'api/upload-image';
+  const DATA_URL = 'data/entregas.json';
+  const LOCAL_STORAGE_KEY = 'daf-entregas-admin-fallback';
 
-  const unitList = document.getElementById('unit-list');
-  const timelineList = document.getElementById('timeline-list');
+  let units = [];
+  let storageMode = 'api';
+  let editingContext = null;
+  let deletingContext = null;
+  let imageValue = '';
+
   const statusEl = document.getElementById('status');
-  const previewEl = document.getElementById('entry-preview');
+  const helperEl = document.getElementById('helper');
+  const filterUnitEl = document.getElementById('filter-unit');
+  const filterMonthEl = document.getElementById('filter-month');
+  const filterSearchEl = document.getElementById('filter-search');
+  const tableBodyEl = document.getElementById('table-body');
+  const tableEmptyEl = document.getElementById('table-empty');
+
+  const editorOverlayEl = document.getElementById('editor-overlay');
+  const confirmOverlayEl = document.getElementById('confirm-overlay');
+  const editorTitleEl = document.getElementById('editor-title');
+  const editorSubtitleEl = document.getElementById('editor-subtitle');
+  const confirmTextEl = document.getElementById('confirm-text');
+
+  const entryUnitEl = document.getElementById('entry-unit');
+  const entryMonthEl = document.getElementById('entry-month');
+  const entryTitleEl = document.getElementById('entry-title');
+  const entryTextEl = document.getElementById('entry-text');
+  const entryImageAltEl = document.getElementById('entry-image-alt');
+  const entryImageFileEl = document.getElementById('entry-image-file');
+  const entryPreviewEl = document.getElementById('entry-preview');
+  const imageFileNameEl = document.getElementById('image-file-name');
 
   function cloneDefaultUnits() {
     return JSON.parse(JSON.stringify(window.DEFAULT_UNITS_DATA || []));
   }
 
+  function setStatus(message) {
+    statusEl.textContent = message;
+  }
+
+  function setHelperMessage() {
+    if (storageMode === 'api') {
+      helperEl.textContent = 'Modo definitivo ativo. As alterações são gravadas no arquivo real do projeto.';
+      return;
+    }
+    helperEl.textContent = 'Modo estático ativo. As alterações ficam neste navegador até você exportar o JSON e publicar o arquivo data/entregas.json.';
+  }
+
+  function loadLocalFallback() {
+    try {
+      const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (error) {}
+    return null;
+  }
+
   async function loadUnits() {
     try {
-      const response = await fetch(API_URL, { cache: 'no-store' });
-      if (!response.ok) throw new Error('Falha ao carregar conteúdo.');
-      return await response.json();
-    } catch (error) {
-      statusEl.textContent = 'Usando conteúdo padrão enquanto o servidor não responde.';
-      return cloneDefaultUnits();
+      const apiResponse = await fetch(API_URL, { cache: 'no-store' });
+      if (apiResponse.ok) {
+        storageMode = 'api';
+        setHelperMessage();
+        return await apiResponse.json();
+      }
+    } catch (error) {}
+
+    storageMode = 'local';
+    setHelperMessage();
+
+    const localData = loadLocalFallback();
+    if (localData) {
+      setStatus('Modo estático ativo. Conteúdo carregado do navegador.');
+      return localData;
     }
+
+    try {
+      const fileResponse = await fetch(DATA_URL, { cache: 'no-store' });
+      if (fileResponse.ok) {
+        setStatus('Modo estático ativo. Conteúdo carregado do arquivo publicado.');
+        return await fileResponse.json();
+      }
+    } catch (error) {}
+
+    setStatus('Modo estático ativo. Usando conteúdo padrão.');
+    return cloneDefaultUnits();
   }
 
   async function persistUnits(message) {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(units)
-    });
-    if (!response.ok) {
-      throw new Error('Não foi possível salvar o conteúdo.');
-    }
-    statusEl.textContent = message || 'Alterações salvas.';
-  }
-
-  function renderUnits() {
-    unitList.innerHTML = '';
-    units.forEach((unit, index) => {
-      const button = document.createElement('button');
-      button.className = 'unit-btn' + (index === activeUnitIndex ? ' active' : '');
-      button.innerHTML = `<strong>${unit.sigla}</strong><span>${unit.name}</span>`;
-      button.addEventListener('click', () => {
-        activeUnitIndex = index;
-        activeEntryIndex = 0;
-        render();
+    if (storageMode === 'api') {
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(units)
       });
-      unitList.appendChild(button);
+      if (!response.ok) throw new Error('Não foi possível salvar o conteúdo.');
+      setStatus(message || 'Alterações salvas.');
+      return;
+    }
+
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(units));
+    setStatus((message || 'Alterações salvas.') + ' Exporte o JSON para publicar definitivamente.');
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;'
+    }[char]));
+  }
+
+  function getFlatEntries() {
+    return units.flatMap((unit, unitIndex) =>
+      unit.timeline.map((item, itemIndex) => ({
+        unitIndex,
+        itemIndex,
+        unitSigla: unit.sigla,
+        unitName: unit.name,
+        month: item.month || '',
+        title: item.title || '',
+        text: item.text || '',
+        image: item.image || '',
+        imageAlt: item.imageAlt || ''
+      }))
+    );
+  }
+
+  function getFilteredEntries() {
+    const unitFilter = filterUnitEl.value;
+    const monthFilter = filterMonthEl.value;
+    const searchFilter = filterSearchEl.value.trim().toLowerCase();
+
+    return getFlatEntries().filter(entry => {
+      const unitMatch = !unitFilter || entry.unitSigla === unitFilter;
+      const monthMatch = !monthFilter || entry.month === monthFilter;
+      const haystack = `${entry.title} ${entry.text} ${entry.unitName} ${entry.unitSigla}`.toLowerCase();
+      const searchMatch = !searchFilter || haystack.includes(searchFilter);
+      return unitMatch && monthMatch && searchMatch;
     });
   }
 
-  function renderUnitForm() {
-    const unit = units[activeUnitIndex];
-    if (!unit) return;
-    document.getElementById('unit-title').textContent = unit.name;
-    document.getElementById('unit-sigla').value = unit.sigla || '';
-    document.getElementById('unit-name').value = unit.name || '';
-    document.getElementById('unit-desc').value = unit.desc || '';
+  function renderFilterOptions() {
+    const currentUnit = filterUnitEl.value;
+    const currentMonth = filterMonthEl.value;
+
+    filterUnitEl.innerHTML = '<option value="">Todas as gerências</option>';
+    units.forEach(unit => {
+      const option = document.createElement('option');
+      option.value = unit.sigla;
+      option.textContent = `${unit.sigla} · ${unit.name}`;
+      filterUnitEl.appendChild(option);
+    });
+    filterUnitEl.value = currentUnit;
+
+    const months = [...new Set(getFlatEntries().map(entry => entry.month).filter(Boolean))];
+    filterMonthEl.innerHTML = '<option value="">Todos os meses</option>';
+    months.forEach(month => {
+      const option = document.createElement('option');
+      option.value = month;
+      option.textContent = month;
+      filterMonthEl.appendChild(option);
+    });
+    filterMonthEl.value = currentMonth;
+
+    entryUnitEl.innerHTML = '';
+    units.forEach(unit => {
+      const option = document.createElement('option');
+      option.value = unit.sigla;
+      option.textContent = `${unit.sigla} · ${unit.name}`;
+      entryUnitEl.appendChild(option);
+    });
   }
 
-  function renderTimelineList() {
-    const unit = units[activeUnitIndex];
-    if (!unit) return;
-    timelineList.innerHTML = '';
-    unit.timeline.forEach((item, index) => {
-      const article = document.createElement('article');
-      article.className = 'timeline-item';
-      article.innerHTML = `
-        <small>${item.month || 'Sem mes'}</small>
-        <h4>${item.title || 'Sem titulo'}</h4>
-        <p>${item.text || ''}</p>
-        <div class="timeline-actions">
-          <button data-edit="${index}">Editar</button>
-          <button data-up="${index}">Subir</button>
-          <button data-down="${index}">Descer</button>
-        </div>
+  function renderTable() {
+    const entries = getFilteredEntries();
+    tableBodyEl.innerHTML = '';
+    tableEmptyEl.hidden = entries.length > 0;
+
+    entries.forEach(entry => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>
+          <div class="entry-title">${escapeHtml(entry.title || 'Sem título')}</div>
+          <div class="entry-text">${escapeHtml(entry.text || '')}</div>
+        </td>
+        <td><span class="badge">${escapeHtml(entry.month || '-')}</span></td>
+        <td><span class="badge">${escapeHtml(entry.unitSigla)}</span></td>
+        <td>
+          <div class="row-actions">
+            <button type="button" data-edit="${entry.unitIndex}:${entry.itemIndex}">Editar</button>
+            <button class="danger" type="button" data-delete="${entry.unitIndex}:${entry.itemIndex}">Excluir</button>
+          </div>
+        </td>
       `;
-      timelineList.appendChild(article);
+      tableBodyEl.appendChild(row);
     });
 
-    timelineList.querySelectorAll('[data-edit]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activeEntryIndex = Number(btn.dataset.edit);
-        renderEntryEditor();
+    tableBodyEl.querySelectorAll('[data-edit]').forEach(button => {
+      button.addEventListener('click', () => {
+        const [unitIndex, itemIndex] = button.dataset.edit.split(':').map(Number);
+        openEditor({ mode: 'edit', unitIndex, itemIndex });
       });
     });
-    timelineList.querySelectorAll('[data-up]').forEach(btn => {
-      btn.addEventListener('click', () => moveEntry(Number(btn.dataset.up), -1));
-    });
-    timelineList.querySelectorAll('[data-down]').forEach(btn => {
-      btn.addEventListener('click', () => moveEntry(Number(btn.dataset.down), 1));
+
+    tableBodyEl.querySelectorAll('[data-delete]').forEach(button => {
+      button.addEventListener('click', () => {
+        const [unitIndex, itemIndex] = button.dataset.delete.split(':').map(Number);
+        openDeleteConfirm(unitIndex, itemIndex);
+      });
     });
   }
 
-  function renderEntryEditor() {
-    const unit = units[activeUnitIndex];
-    const item = unit.timeline[activeEntryIndex];
-    document.getElementById('entry-editor-title').textContent = item ? `Editando entrega ${activeEntryIndex + 1}` : 'Selecione uma entrega';
-    document.getElementById('entry-month').value = item?.month || '';
-    document.getElementById('entry-title').value = item?.title || '';
-    document.getElementById('entry-text').value = item?.text || '';
-    document.getElementById('entry-image').value = item?.image || '';
-    document.getElementById('entry-image-alt').value = item?.imageAlt || '';
-    if (item?.image) {
-      previewEl.src = item.image;
-      previewEl.alt = item.imageAlt || item.title || '';
-      previewEl.hidden = false;
+  function renderAll() {
+    renderFilterOptions();
+    renderTable();
+  }
+
+  function closeEditor() {
+    editingContext = null;
+    imageValue = '';
+    entryImageFileEl.value = '';
+    editorOverlayEl.classList.remove('open');
+    editorOverlayEl.setAttribute('aria-hidden', 'true');
+  }
+
+  function updateImagePreview() {
+    if (imageValue) {
+      entryPreviewEl.src = imageValue;
+      entryPreviewEl.hidden = false;
+      entryPreviewEl.alt = entryImageAltEl.value.trim() || entryTitleEl.value.trim() || 'Imagem da entrega';
+      return;
+    }
+    entryPreviewEl.hidden = true;
+    entryPreviewEl.removeAttribute('src');
+    entryPreviewEl.alt = '';
+  }
+
+  function openEditor(context) {
+    editingContext = context;
+    const isEdit = context.mode === 'edit';
+    const unit = isEdit ? units[context.unitIndex] : units[0];
+    const item = isEdit ? unit.timeline[context.itemIndex] : null;
+
+    editorTitleEl.textContent = isEdit ? 'Editar entrega' : 'Nova entrega';
+    editorSubtitleEl.textContent = isEdit ? 'Atualize os dados da entrega e salve para refletir na tabela.' : 'Preencha os dados para adicionar uma nova entrega.';
+
+    entryUnitEl.value = unit ? unit.sigla : '';
+    entryMonthEl.value = item?.month || '';
+    entryTitleEl.value = item?.title || '';
+    entryTextEl.value = item?.text || '';
+    entryImageAltEl.value = item?.imageAlt || '';
+    imageValue = item?.image || '';
+    imageFileNameEl.textContent = item?.image ? 'Imagem carregada' : 'Nenhuma imagem selecionada';
+    updateImagePreview();
+
+    editorOverlayEl.classList.add('open');
+    editorOverlayEl.setAttribute('aria-hidden', 'false');
+  }
+
+  function openDeleteConfirm(unitIndex, itemIndex) {
+    deletingContext = { unitIndex, itemIndex };
+    const item = units[unitIndex]?.timeline[itemIndex];
+    confirmTextEl.textContent = `Confirme para excluir a entrega "${item?.title || 'sem título'}".`;
+    confirmOverlayEl.classList.add('open');
+    confirmOverlayEl.setAttribute('aria-hidden', 'false');
+  }
+
+  function closeDeleteConfirm() {
+    deletingContext = null;
+    confirmOverlayEl.classList.remove('open');
+    confirmOverlayEl.setAttribute('aria-hidden', 'true');
+  }
+
+  async function saveEntry() {
+    const selectedSigla = entryUnitEl.value;
+    const targetUnitIndex = units.findIndex(unit => unit.sigla === selectedSigla);
+    if (targetUnitIndex === -1) throw new Error('Selecione uma gerência válida.');
+
+    const payload = {
+      month: entryMonthEl.value.trim(),
+      title: entryTitleEl.value.trim(),
+      text: entryTextEl.value.trim()
+    };
+
+    if (!payload.title) throw new Error('Informe o título da entrega.');
+    if (!payload.month) throw new Error('Informe o mês da entrega.');
+
+    if (imageValue) {
+      payload.image = imageValue;
+      const alt = entryImageAltEl.value.trim();
+      if (alt) payload.imageAlt = alt;
+    }
+
+    if (editingContext.mode === 'edit') {
+      const sourceUnit = units[editingContext.unitIndex];
+      const [existing] = sourceUnit.timeline.splice(editingContext.itemIndex, 1);
+      const targetTimeline = units[targetUnitIndex].timeline;
+      const targetIndex = targetUnitIndex === editingContext.unitIndex
+        ? Math.min(editingContext.itemIndex, targetTimeline.length)
+        : targetTimeline.length;
+      targetTimeline.splice(targetIndex, 0, { ...existing, ...payload });
+      await persistUnits('Entrega atualizada.');
     } else {
-      previewEl.hidden = true;
-      previewEl.removeAttribute('src');
+      units[targetUnitIndex].timeline.push(payload);
+      await persistUnits('Entrega criada.');
     }
+
+    closeEditor();
+    renderAll();
   }
 
-  function render() {
-    if (!units.length) return;
-    renderUnits();
-    renderUnitForm();
-    renderTimelineList();
-    renderEntryEditor();
+  async function deleteEntry() {
+    if (!deletingContext) return;
+    const unit = units[deletingContext.unitIndex];
+    if (!unit) return;
+    unit.timeline.splice(deletingContext.itemIndex, 1);
+    await persistUnits('Entrega excluída.');
+    closeDeleteConfirm();
+    renderAll();
   }
 
-  async function moveEntry(index, direction) {
-    const unit = units[activeUnitIndex];
-    const target = index + direction;
-    if (target < 0 || target >= unit.timeline.length) return;
-    const swap = unit.timeline[index];
-    unit.timeline[index] = unit.timeline[target];
-    unit.timeline[target] = swap;
-    activeEntryIndex = target;
-    await persistUnits('Ordem atualizada.');
-    render();
+  async function importJsonFile(file) {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    if (!Array.isArray(parsed)) throw new Error('Arquivo JSON inválido.');
+    units = parsed;
+    await persistUnits('Conteúdo importado.');
+    renderAll();
   }
 
-  document.getElementById('save-unit-btn').addEventListener('click', async () => {
-    try {
-      const unit = units[activeUnitIndex];
-      unit.sigla = document.getElementById('unit-sigla').value.trim();
-      unit.name = document.getElementById('unit-name').value.trim();
-      unit.desc = document.getElementById('unit-desc').value.trim();
-      await persistUnits('Unidade salva.');
-      render();
-    } catch (error) {
-      statusEl.textContent = error.message;
-    }
-  });
-
-  document.getElementById('add-entry-btn').addEventListener('click', async () => {
-    try {
-      units[activeUnitIndex].timeline.push({
-        month: 'Novo mes',
-        title: 'Nova entrega',
-        text: '',
-        image: '',
-        imageAlt: ''
-      });
-      activeEntryIndex = units[activeUnitIndex].timeline.length - 1;
-      await persistUnits('Nova entrega criada.');
-      render();
-    } catch (error) {
-      statusEl.textContent = error.message;
-    }
-  });
+  document.getElementById('add-entry-btn').addEventListener('click', () => openEditor({ mode: 'create' }));
+  document.getElementById('close-editor-btn').addEventListener('click', closeEditor);
+  document.getElementById('cancel-editor-btn').addEventListener('click', closeEditor);
+  document.getElementById('cancel-delete-btn').addEventListener('click', closeDeleteConfirm);
 
   document.getElementById('save-entry-btn').addEventListener('click', async () => {
     try {
-      const unit = units[activeUnitIndex];
-      const item = unit.timeline[activeEntryIndex];
-      if (!item) return;
-      item.month = document.getElementById('entry-month').value.trim();
-      item.title = document.getElementById('entry-title').value.trim();
-      item.text = document.getElementById('entry-text').value.trim();
-      item.image = document.getElementById('entry-image').value.trim();
-      item.imageAlt = document.getElementById('entry-image-alt').value.trim();
-      if (!item.image) {
-        delete item.image;
-        delete item.imageAlt;
-      }
-      await persistUnits('Entrega salva.');
-      render();
+      await saveEntry();
     } catch (error) {
-      statusEl.textContent = error.message;
+      setStatus(error.message || 'Não foi possível salvar a entrega.');
     }
   });
 
-  document.getElementById('duplicate-entry-btn').addEventListener('click', async () => {
+  document.getElementById('confirm-delete-btn').addEventListener('click', async () => {
     try {
-      const unit = units[activeUnitIndex];
-      const item = unit.timeline[activeEntryIndex];
-      if (!item) return;
-      unit.timeline.splice(activeEntryIndex + 1, 0, JSON.parse(JSON.stringify(item)));
-      activeEntryIndex += 1;
-      await persistUnits('Entrega duplicada.');
-      render();
+      await deleteEntry();
     } catch (error) {
-      statusEl.textContent = error.message;
-    }
-  });
-
-  document.getElementById('delete-entry-btn').addEventListener('click', async () => {
-    try {
-      const unit = units[activeUnitIndex];
-      if (!unit.timeline.length) return;
-      unit.timeline.splice(activeEntryIndex, 1);
-      activeEntryIndex = Math.max(0, activeEntryIndex - 1);
-      await persistUnits('Entrega removida.');
-      render();
-    } catch (error) {
-      statusEl.textContent = error.message;
+      setStatus(error.message || 'Não foi possível excluir a entrega.');
     }
   });
 
   document.getElementById('reset-btn').addEventListener('click', async () => {
     try {
       units = cloneDefaultUnits();
-      activeUnitIndex = 0;
-      activeEntryIndex = 0;
-      await persistUnits('Conteudo padrao restaurado.');
-      render();
+      await persistUnits('Conteúdo padrão restaurado.');
+      renderAll();
     } catch (error) {
-      statusEl.textContent = error.message;
+      setStatus(error.message || 'Não foi possível restaurar o conteúdo.');
     }
+  });
+
+  document.getElementById('import-btn').addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'application/json,.json';
+    input.addEventListener('change', async () => {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      try {
+        await importJsonFile(file);
+      } catch (error) {
+        setStatus(error.message || 'Falha ao importar o JSON.');
+      }
+    });
+    input.click();
   });
 
   document.getElementById('export-btn').addEventListener('click', () => {
@@ -491,16 +856,88 @@
     link.download = 'entregas.json';
     link.click();
     URL.revokeObjectURL(link.href);
-    statusEl.textContent = 'Arquivo JSON exportado.';
+    setStatus('Arquivo JSON exportado.');
   });
 
   document.getElementById('open-site-btn').addEventListener('click', () => {
     window.location.href = 'index.html';
   });
 
+  filterUnitEl.addEventListener('change', renderTable);
+  filterMonthEl.addEventListener('change', renderTable);
+  filterSearchEl.addEventListener('input', renderTable);
+
+  document.getElementById('image-upload-btn').addEventListener('click', () => {
+    entryImageFileEl.click();
+  });
+
+  document.getElementById('image-remove-btn').addEventListener('click', () => {
+    imageValue = '';
+    entryImageFileEl.value = '';
+    imageFileNameEl.textContent = 'Nenhuma imagem selecionada';
+    updateImagePreview();
+  });
+
+  entryImageAltEl.addEventListener('input', updateImagePreview);
+  entryTitleEl.addEventListener('input', updateImagePreview);
+
+  entryImageFileEl.addEventListener('change', async () => {
+    const file = entryImageFileEl.files && entryImageFileEl.files[0];
+    if (!file) return;
+    imageFileNameEl.textContent = file.name;
+
+    if (storageMode !== 'api') {
+      imageValue = `assets/${file.name}`;
+      updateImagePreview();
+      setStatus('Em modo estático, publique manualmente a imagem em /assets/ e exporte o JSON.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      try {
+        const response = await fetch(IMAGE_UPLOAD_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fileName: file.name,
+            dataUrl: reader.result
+          })
+        });
+        const result = await response.json();
+        if (!response.ok || !result.path) {
+          throw new Error(result.error || 'Não foi possível enviar a imagem.');
+        }
+        imageValue = result.path;
+        imageFileNameEl.textContent = result.path;
+        updateImagePreview();
+        setStatus('Imagem enviada para a pasta assets.');
+      } catch (error) {
+        setStatus(error.message || 'Falha no envio da imagem.');
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+
+  editorOverlayEl.addEventListener('click', e => {
+    if (e.target === editorOverlayEl) closeEditor();
+  });
+
+  confirmOverlayEl.addEventListener('click', e => {
+    if (e.target === confirmOverlayEl) closeDeleteConfirm();
+  });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (confirmOverlayEl.classList.contains('open')) closeDeleteConfirm();
+      else if (editorOverlayEl.classList.contains('open')) closeEditor();
+    }
+  });
+
   async function init() {
     units = await loadUnits();
-    render();
+    setHelperMessage();
+    renderAll();
   }
 
   init();

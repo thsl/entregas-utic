@@ -7,6 +7,7 @@ const vm = require('vm');
 const ROOT_DIR = __dirname;
 const DATA_FILE = path.join(ROOT_DIR, 'data', 'entregas.json');
 const DEFAULT_DATA_SCRIPT = path.join(ROOT_DIR, 'entregas-data.js');
+const ASSETS_DIR = path.join(ROOT_DIR, 'assets');
 const PORT = Number(process.env.PORT || 8787);
 
 const MIME_TYPES = {
@@ -63,7 +64,50 @@ function isValidContent(data) {
   );
 }
 
+function sanitizeFileName(name) {
+  return String(name || 'imagem')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9._-]/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+function parseDataUrl(dataUrl) {
+  const match = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/.exec(dataUrl || '');
+  if (!match) throw new Error('Imagem em formato inválido.');
+  return {
+    mimeType: match[1],
+    buffer: Buffer.from(match[2], 'base64')
+  };
+}
+
 async function handleApi(req, res, pathname) {
+  if (pathname === '/api/upload-image' && req.method === 'POST') {
+    try {
+      const rawBody = await readRequestBody(req);
+      const payload = JSON.parse(rawBody || 'null');
+      const originalName = sanitizeFileName(payload?.fileName || 'imagem');
+      const parsed = parseDataUrl(payload?.dataUrl);
+      const extFromMime = {
+        'image/png': '.png',
+        'image/jpeg': '.jpg',
+        'image/jpg': '.jpg',
+        'image/gif': '.gif',
+        'image/webp': '.webp',
+        'image/svg+xml': '.svg'
+      }[parsed.mimeType] || path.extname(originalName) || '.png';
+      const baseName = path.basename(originalName, path.extname(originalName)) || 'imagem';
+      const finalName = `${Date.now()}-${baseName}${extFromMime}`;
+      fs.mkdirSync(ASSETS_DIR, { recursive: true });
+      fs.writeFileSync(path.join(ASSETS_DIR, finalName), parsed.buffer);
+      sendJson(res, 200, { ok: true, path: `assets/${finalName}` });
+    } catch (error) {
+      sendJson(res, 400, { error: error.message || 'Falha ao enviar imagem.' });
+    }
+    return true;
+  }
+
   if (pathname !== '/api/content') return false;
 
   ensureDataFile();

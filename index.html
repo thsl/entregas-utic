@@ -664,7 +664,7 @@
 <section id="about">
   <div class="section-eyebrow">Visão Geral · 2023-2026</div>
   <h2 class="section-title">Uma diretoria que conecta<br>estratégia e operação</h2>
-  <p class="section-body">A DAF é o eixo de sustentação do Sebrae Nacional, garantindo a excelência nos processos de gestão financeira, pessoas, tecnologia, suprimentos e inovação institucional ao longo de todo o ano.</p>
+  <p class="section-body">A DAF é o eixo de sustentação do Sebrae Nacional, garantindo a excelência nos processos de gestão financeira, pessoas, tecnologia, suprimentos e inovação institucional ao longo de todos os anos.</p>
   <div class="stats-row">
     <div class="stat-item">
       <div class="stat-number">8<span>+</span></div>
@@ -730,7 +730,7 @@ let units = [];
 
 async function loadUnitsData() {
   try {
-    const response = await fetch('/api/content', { cache: 'no-store' });
+    const response = await fetch('data/entregas.json', { cache: 'no-store' });
     if (!response.ok) throw new Error('Falha ao carregar o conteúdo.');
     return await response.json();
   } catch (error) {}
